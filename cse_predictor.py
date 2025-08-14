@@ -14,17 +14,11 @@ from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.model_selection import TimeSeriesSplit
 
 DEFAULT_TICKERS = [
-    "JKH-N0000.CM",   # John Keells Holdings PLC
-    "COMB-N0000.CM",  # Commercial Bank of Ceylon PLC
-    "HNB-N0000.CM",   # Hatton National Bank PLC
-    "NDB-N0000.CM",   # National Development Bank PLC
-    "DIAL-N0000.CM",  # Dialog Axiata PLC
-    "LOLC-N0000.CM",  # LOLC Holdings PLC
-    "LIOC-N0000.CM",  # Lanka IOC PLC
-    "RCL-N0000.CM",   # Royal Ceramics Lanka PLC
-    "DIST-N0000.CM",  # Distilleries Company of Sri Lanka PLC
-    "HAYL-N0000.CM",  # Hayleys PLC
+    "JKH.N0000.CM",
+    "COMB.N0000.CM",
+    "DIAL.N0000.CM"
 ]
+
 
 START_DATE = "2018-01-01"
 END_DATE = None
@@ -82,8 +76,15 @@ def fit_and_predict_for_ticker(ticker: str) -> TickerResult:
     except Exception as e:
         return TickerResult(ticker, "ERROR", float("nan"), 0.5, f"fetch_error: {e}", 0.0, 0.5, 0)
 
-    if data is None or data.empty or len(data) < MIN_ROWS:
-        return TickerResult(ticker, "N/A", float("nan"), 0.5, "not_enough_data", 0.0, 0.5, len(data) if data is not None else 0)
+    if data.empty or "Close" not in data:
+    return type("Result", (), {
+        "ticker": ticker,
+        "last_date": None,
+        "last_close": None,
+        "pred_dir": "NO DATA",
+        "pred_prob_up": None
+    })()
+
 
     df = make_features(data)
 
