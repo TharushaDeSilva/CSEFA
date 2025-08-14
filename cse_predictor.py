@@ -70,21 +70,18 @@ class TickerResult:
     auc: float
     n_rows: int
 
-def fit_and_predict_for_ticker(ticker: str) -> TickerResult:
-    try:
-        data = yf.download(ticker, start=START_DATE, end=END_DATE, progress=False, auto_adjust=True)
-    except Exception as e:
-        return TickerResult(ticker, "ERROR", float("nan"), 0.5, f"fetch_error: {e}", 0.0, 0.5, 0)
+def fit_and_predict_for_ticker(ticker):
+    data = yf.download(ticker, period="1y")
 
+    # Check if there's data
     if data.empty or "Close" not in data:
-    return type("Result", (), {
-        "ticker": ticker,
-        "last_date": None,
-        "last_close": None,
-        "pred_dir": "NO DATA",
-        "pred_prob_up": None
-    })()
-
+        return type("Result", (), {
+            "ticker": ticker,
+            "last_date": None,
+            "last_close": None,
+            "pred_dir": "NO DATA",
+            "pred_prob_up": None
+        })()
 
     df = make_features(data)
 
